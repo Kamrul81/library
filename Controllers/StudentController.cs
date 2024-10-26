@@ -70,7 +70,7 @@ namespace library.Controllers
         }
 
 
-        [HttpPost]
+        /*[HttpPost]
         public async Task<IActionResult> Delete(Student viewModel)
         {
             var student = await dbContext.Students.AsNoTracking().FirstOrDefaultAsync( x=> x.ID == viewModel.ID);
@@ -81,9 +81,19 @@ namespace library.Controllers
                 await dbContext.SaveChangesAsync();
             }
             return RedirectToAction("List", "Student");
+        }*/
 
+        [HttpPost]
+        public async Task<IActionResult> Delete(Guid id)
+        {
+            var student = await dbContext.Students.FindAsync(id);
 
-
+            if (student is not null)
+            {
+                dbContext.Students.Remove(student); // Use the found student entity
+                await dbContext.SaveChangesAsync();
+            }
+            return RedirectToAction("List"); // Redirect after deletion
         }
     }
 }

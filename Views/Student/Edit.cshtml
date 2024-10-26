@@ -16,42 +16,105 @@
 
 else
 {
-    <form method="post">
-
+    <form id="studentForm" method="post" onsubmit="return handlesave(event)">
         <div>
             <div class="mt-3">
-                <label class="form-label">ID</label>
-                <input type="text" class="form-control" asp-for="ID" readonly />
-            </div>
-
-            <div class="mt-3">
                 <label class="form-label">Name</label>
-                <input type="text" class="form-control" asp-for="Name" />
+                <input id="Name" type="text" class="form-control" asp-for="Name" />
             </div>
 
             <div class="mt-3">
                 <label class="form-label">Roll</label>
-                <input type="text" class="form-control" asp-for="StudentRoll" />
+                <input id="roll" type="text" class="form-control" asp-for="StudentRoll" />
             </div>
 
             <div class="mt-3">
                 <label class="form-label">Gender</label>
-                <input type="text" class="form-control" asp-for="Gender" />
+                <input id="gender" type="text" class="form-control" asp-for="Gender" />
             </div>
 
             <div class="mt-3">
                 <label class="form-label">Std/Class</label>
-                <input type="text" class="form-control" asp-for="Std" />
+                <input id="std" type="text" class="form-control" asp-for="Std" />
             </div>
 
             <div class="mt-3">
                 <button type="submit" class="btn btn-primary">Submit</button>
-                <button type="submit" class="btn btn-danger ms-3" asp-action="Delete" asp-controller="Student">Delete</button>
             </div>
-
-
         </div>
-
-
     </form>
+
+    <br>
+
+    <form method="post" action="@Url.Action("Delete", "Student")" style="display:inline;">
+        <input type="hidden" name="id" value="@Model.ID" />
+        <button style="width: 200px; height: 50px;" type="submit" class="btn btn-danger">Delete</button>
+    </form>
+
+    <script type="text/javascript">
+
+        function handlesave(e) {
+            e.preventDefault(); // Prevent the default form submission
+
+            let isproceed = true;
+
+            var Name = document.getElementById('Name').value.trim();
+            var roll = document.getElementById('roll').value.trim();
+            var gender = document.getElementById('gender').value.trim();
+            var std = document.getElementById('std').value.trim();
+
+            // Clear previous styles
+            document.querySelectorAll('input').forEach(input => {
+                input.style.borderColor = '#ccc';
+            });
+
+            // Validate Name
+            if (Name === '') {
+                isproceed = false;
+                document.getElementById('Name').style.borderColor = 'red';
+                alert("Please enter a name.");
+            }
+            else {
+                // Validate Roll
+                if (roll === '') {
+                    isproceed = false;
+                    document.getElementById('roll').style.borderColor = 'red';
+                    alert("Please enter a roll number.");
+                }
+                else if (!/^\d+$/.test(roll)) { // Roll should be numeric
+                    isproceed = false;
+                    document.getElementById('roll').style.borderColor = 'red';
+                    alert("Roll number must be numeric.");
+                }
+                else {
+                    // Validate Gender
+                    if (gender === '') {
+                        isproceed = false;
+                        document.getElementById('gender').style.borderColor = 'red';
+                        alert("Please enter a gender.");
+                    }
+                    else {
+                        // Validate Std/Class
+                        if (std === '') {
+                            isproceed = false;
+                            document.getElementById('std').style.borderColor = 'red';
+                            alert("Please enter a standard/class.");
+                        }
+                    }
+
+
+                }
+            }
+
+            // Proceed if all validations pass
+            if (isproceed) {
+                // You can submit the form or perform an AJAX request here
+                alert("Form is valid. Submitting...");
+                document.getElementById('studentForm').submit(); // This will submit the form
+            }
+
+            return isproceed; // Return false to prevent form submission if not valid
+        }
+    </script>
+
 }
